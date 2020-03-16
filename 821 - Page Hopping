@@ -1,1 +1,73 @@
 
+#include <bits/stdc++.h>
+using namespace std;
+vector<int> adj[110];
+int dist[110];
+
+int bfs(int inicial, int *tam)
+{
+    for(int j=0;j<110;j++)
+    {
+        dist[j]=1e9;
+    }
+    queue<int> kiwi;
+    kiwi.push(inicial);
+    dist[inicial]=0;
+    int result = 0;
+    while (!kiwi.empty())
+    {
+        int u=kiwi.front();
+        kiwi.pop();
+        for(int i=0;i<adj[u].size();i++)
+        {
+            if(dist[adj[u][i]] == 1e9)
+            {
+                dist[adj[u][i]]=dist[u]+1;
+                result = result + dist[adj[u][i]];
+                kiwi.push(adj[u][i]);
+                *tam=*tam+1;
+            }
+        }
+    }
+    return result;
+}
+
+int main()
+{
+//    freopen("in", "r", stdin);
+//    freopen("out", "w", stdout);
+    int a,b,soma,tam, cont=1;
+    float resultado;
+    cin >> a >> b;
+    while (a || b)
+    {
+        soma = 0;
+        tam = 0;
+        adj[a].push_back(b);
+        while (cin >> a >> b and (a||b))
+        {
+            adj[a].push_back(b);
+        }
+
+
+        for(int i=1;i<=100;i++)
+        {
+            soma = soma + bfs(i,&tam);
+        }
+        resultado = (float)soma/tam;
+        printf("Case %d: average length between pages = %.3f clicks\n",cont, resultado);
+        //cout <<setprecision(4) << (float)soma / 12;
+
+
+        cont++;
+
+
+        for(int i=0;i<110;i++)
+        {
+            adj[i].clear();
+        }
+        adj->clear();
+
+        cin >> a >> b;
+    }
+}
