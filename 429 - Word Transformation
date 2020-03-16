@@ -1,0 +1,128 @@
+#include <bits/stdc++.h>
+#include <stdio.h>
+using namespace std;
+map<string, vector<string> > adj;
+map<string,int> dist;
+int bfs(string inicial, string final)
+{
+    queue<string> kiwi;
+    kiwi.push(inicial);
+    dist[inicial]=0;
+
+    while (!kiwi.empty())
+    {
+        string u = kiwi.front();
+        kiwi.pop();
+        for(int i=0;i<adj[u].size();i++)
+        {
+            if(dist.find(adj[u][i]) == dist.end())
+            {
+                kiwi.push(adj[u][i]);
+                dist[adj[u][i]] = dist[u]+1;
+            }
+        }
+    }
+    return dist[final];
+}
+
+
+
+
+int main()
+{
+    //freopen("in.txt", "r", stdin);
+    //freopen("out.txt", "w", stdout);
+    int N;
+    cin>>N;
+    for(int cont=0; cont<N;cont++)
+    {
+        if(cont>0 && cont<N)
+            cout<<endl;
+        string k;
+        string vet[210];
+        bool visit[210];
+
+        int posi = 0;
+        while (cin>>k and k != "*")
+        {
+            vet[posi] = k;
+            posi++;
+        }
+
+        for(int i=0;i<posi;i++)
+        {
+            for(int i=0;i<210;i++)
+            {
+                visit[i] = 0;
+            }
+            queue<string> kiwi1;
+            kiwi1.push(vet[i]);
+            while (!kiwi1.empty())
+            {
+                string aux2=kiwi1.front();
+                kiwi1.pop();
+                int diferen=0;
+                for (int i=0;i<posi;i++)
+                {
+                    if(aux2.size() == vet[i].size())
+                    {
+                        for (int j=0;j<aux2.size();j++)
+                        {
+                            if(aux2[j] != vet[i][j])
+                            {
+                                diferen++;
+                            }
+                        }
+                        if(diferen==1 && !visit[i])
+                        {
+                            kiwi1.push(vet[i]);
+                            vector<string>::iterator it = find(adj[aux2].begin(),adj[aux2].end(),vet[i]);
+                            if(it == adj[aux2].end())
+                            {
+                                adj[aux2].push_back(vet[i]);
+                            }
+                            visit[i]=1;
+                        }
+                    }
+                    diferen=0;
+                }
+            }
+        }
+
+        k = "";
+        cin.ignore();
+
+        while(getline(cin,k) && k != "")
+        {
+            string palavra1, palavra2;
+            string *aux;
+            aux = &palavra1;
+            for(int i=0;i<k.size();i++)
+            {
+                if(k[i]!=' ')
+                {
+                    *aux+=k[i];
+                }
+                else
+                {
+                    aux=&palavra2;
+                }
+            }
+
+            dist.clear();
+            cout << k << " " <<  bfs(palavra1, palavra2) << endl;
+        }
+
+        
+        //        for (map<string, vector<string> >::iterator it = adj.begin();it!=adj.end();it++)
+        //        {
+        //            cout << it->first << " | ";
+        //            for(int i=0;i<it->second.size();i++)
+        //            {
+        //                cout << it->second[i]<<" ";
+        //            }
+        //            cout<<endl;
+        //        }
+
+    }
+}
