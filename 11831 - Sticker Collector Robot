@@ -1,0 +1,141 @@
+#include <bits/stdc++.h>
+using namespace std;
+char  Mat[500][500];
+queue<char> kiwi;
+int bfs(int M, int N, pair<int,int> posi)
+{
+    char orientacao = Mat[posi.first][posi.second];
+    int cont = 0;
+    while (!kiwi.empty())
+    {
+        char u = kiwi.front();
+        kiwi.pop();
+        int i = posi.first, j = posi.second;
+
+        if(u == 'D')
+        {
+            if(orientacao == 'N')
+            {
+                orientacao = 'L';
+            }
+            else
+            {
+                if(orientacao == 'L')
+                {
+                    orientacao = 'S';
+                }
+                else
+                {
+                    if(orientacao == 'S')
+                    {
+                        orientacao = 'O';
+                    }
+                    else
+                    {
+                        orientacao = 'N';
+                    }
+                }
+            }
+        }
+        if(u == 'E')
+        {
+            if(orientacao == 'N')
+            {
+                orientacao = 'O';
+            }
+            else
+            {
+                if(orientacao == 'O')
+                {
+                    orientacao = 'S';
+                }
+                else
+                {
+                    if(orientacao == 'S')
+                    {
+                        orientacao = 'L';
+                    }
+                    else
+                    {
+                        orientacao = 'N';
+                    }
+                }
+            }
+        }
+        if(u == 'F')
+        {
+            if(orientacao == 'S' && (i+1) < M && Mat[i+1][j] != '#')
+            {
+                //Mat[i][j]='.';
+                if(Mat[i+1][j]=='*')
+                {
+                    cont ++;
+                }
+                Mat[i+1][j]='S';
+
+                posi= make_pair(i+1, j);
+
+            }
+            if(orientacao == 'N' && (i-1) >= 0 && Mat[i-1][j] != '#')
+            {
+                //Mat[i][j]='.';
+                if(Mat[i-1][j]=='*')
+                {
+                    cont ++;
+                }
+                Mat[i-1][j]='N';
+                posi= make_pair(i-1, j);
+            }
+            if(orientacao == 'L' && (j+1) < N && Mat[i][j+1] != '#')
+            {
+                //Mat[i][j]='.';
+                if(Mat[i][j+1]=='*')
+                {
+                    cont ++;
+                }
+                Mat[i][j+1]='L';
+                posi= make_pair(i, j+1);
+            }
+            if(orientacao == 'O' && (j-1) >= 0 && Mat[i][j-1] != '#')
+            {
+                //Mat[i][j]='.';
+                if(Mat[i][j-1]=='*')
+                {
+                    cont ++;
+                }
+                Mat[i][j-1]='O';
+                posi= make_pair(i, j-1);
+            }
+        }
+
+    }
+    return cont;
+}
+
+int main()
+{
+    int M,N,S;
+    pair<int,int> Inicial;
+    char aux;
+    while(cin >> M >> N >> S and (M || N || S))
+    {
+        for(int i=0; i<M; i++)
+        {
+            for(int j=0; j<N; j++)
+            {
+                cin >> Mat[i][j];
+                aux = Mat[i][j];
+                if(Mat[i][j] != '.' and Mat[i][j] != '*' and Mat[i][j] != '#')
+                {
+                    Inicial = make_pair(i,j);
+                }
+            }
+        }
+        for(int i=0; i<S;i++)
+        {
+            cin >> aux;
+            kiwi.push(aux);
+        }
+        cout << bfs(M,N,Inicial) << endl;
+    }
+}
