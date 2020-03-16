@@ -1,0 +1,88 @@
+#include <bits/stdc++.h>
+#include <stdio.h>
+using namespace std;
+vector<pair<int, int> > adj[20100];
+int dist[20100];
+bool visit[20100];
+
+int dfs(int inicial, int final)
+{
+
+    queue<int> kiwi;
+    vector<pair<int, int> > *adjs;
+    int *dista;
+    bool *visitado;
+    adjs = adj;
+    kiwi.push(inicial);
+    dist[inicial]=0;
+    visit[inicial]=1;
+    int aux;
+    while(!kiwi.empty())
+    {
+        int u = kiwi.front();
+        kiwi.pop();
+        for(int i=0;i<adj[u].size();i++)
+        {
+            int atual = adj[u][i].first;
+            if(dist[adj[u][i].first]== 1e9 || (dist[adj[u][i].first] > (dist[u] + adj[u][i].second)))
+            {
+                kiwi.push(adj[u][i].first);
+                dist[adj[u][i].first] = dist[u] + adj[u][i].second;
+            }
+        }
+    }
+    return dist[final];
+}
+
+
+
+int main()
+{
+    //freopen("in","r",stdin);
+    //freopen("out","w",stdout);
+    int N, n, m, S, T;
+    cin >> N;
+    int caso = 1;
+    while (N--)
+    {
+
+        cin >> n  >> m >> S >> T;
+        for(int i=0; i < (n + 20); i++)
+        {
+            dist[i] = 1e9;
+            visit[i] = 0;
+            adj[i].clear();
+        }
+        adj->clear();
+        int a, b, c;
+        for(int i=0; i < m; i++)
+        {
+            cin >> a >> b >> c;
+            adj[a].push_back(make_pair(b,c));
+            adj[b].push_back(make_pair(a,c));
+        }
+        
+        /*
+        for (int i=0;i<3;i++)
+          {  cout<<i<< ": ";
+            for (int j=0;j<adj[i].size();j++)
+            {
+                cout<<adj[i][j].first << " " << adj[i][j].second << " | ";
+            }
+            cout<<endl;
+        }*/
+
+        int result = dfs(S,T);
+        cout << "Case #"<<caso<<": ";
+        caso++;
+        if(result != 1e9)
+        {
+            cout << result;
+        }
+        else
+        {
+            cout << "unreachable";
+        }
+        cout << endl;
+    }
+}
